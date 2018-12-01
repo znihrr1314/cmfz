@@ -3,6 +3,7 @@ package com.zn.cmfz.controller;
 import com.zn.cmfz.service.AlbumService;
 import com.zn.cmfz.service.ChapterService;
 import com.zn.cmfz.util.FileUtil;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,9 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -60,8 +65,31 @@ public class AlbumController {
         //文件大小
         long t = muc.getSize();
         double l = t / 1024.0 / 1024.0;
-        boolean result = chapterService.addChapter(title, l, duration, file.getAbsolutePath() + "/" + fileName, pid);
+        boolean result = chapterService.addChapter(title, l, duration, fileName, pid);
         return result;
+    }
+
+    @RequestMapping("/download")
+    public void download(String downPath, String title, HttpServletRequest request, HttpServletResponse response) {
+        //获取文件存储路径
+        String uploadPath = request.getSession().getServletContext().getRealPath("upload");  //webapp当前项目的路径
+        //获取文件位置
+        String path = uploadPath + "/" + downPath;
+        File file = new File(path);
+        //获取文件名
+        String s = title + "." + "mp3";
+        try {
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(s, "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        response.setContentType("audio/mpeg");
+        try {
+            ServletOutputStream outputStream = response.getOutputStream();
+            outputStream.write(FileUtils.readFileToByteArray(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

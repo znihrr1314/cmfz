@@ -59,6 +59,22 @@
         text: "下载音频",
         iconCls: 'icon-help',
         handler: function () {
+            var w = $("#myTree").treegrid("getSelected")
+            if (w != null) {
+                if (w.size != null) {
+                    location = "download?url=" + w.downPath + "&title=" + w.title
+                } else {
+                    $.messager.show({
+                        title: '警告',
+                        msg: '请选中章节',
+                    });
+                }
+            } else {
+                $.messager.show({
+                    title: '警告',
+                    msg: '请选中一行',
+                });
+            }
         }
     }]
     $(function () {
@@ -92,6 +108,13 @@
             }],
         });
 
+        $('#audio').dialog({
+            title: '播放',
+            width: 400,
+            height: 200,
+            closed: true,
+        });
+
         $('#chapter').dialog({
             resizable: true,
             title: '添加章节',
@@ -113,6 +136,10 @@
         });
 
         $('#myTree').treegrid({
+            onDblClickRow: function (row) {
+                $("#audio").dialog("open")
+                $("#audio_id").prop("src", "${pageContext.request.contextPath}/upload/" + row.downPath)
+            },
             toolbar: db,
             fitColumns: true,
             url: 'allAlbum',
@@ -314,4 +341,7 @@
             </tr>
         </table>
     </form>
+</div>
+<div id="audio">
+    <audio id="audio_id" src="" autoplay="autoplay" controls="controls" loop="loop"></audio>
 </div>
