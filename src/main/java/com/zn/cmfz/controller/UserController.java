@@ -49,6 +49,7 @@ public class UserController {
 
     @RequestMapping("/export")
     public void export(HttpServletResponse response) {
+
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment;fileName=allUser.xls");
         try {
@@ -57,10 +58,12 @@ public class UserController {
             for (int i = 0; i < lists.size(); i++) {
                 list.add(lists.get(i));
             }
+
             /*File savefile = new File("E:/excel/");
             if (!savefile.exists()) {
                 savefile.mkdirs();
             }*/
+
             ExportParams exort = new ExportParams("所有用户", "用户表");
             Workbook workbook = ExcelExportUtil.exportExcel(exort, User.class, list);
 
