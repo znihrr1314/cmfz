@@ -4,16 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Menu {
+public class UserDTO {
     private int id;
-    private String title;
-    private String iconCls;
-    private int parentId;
-    private String url;
-    private List<Menu> menuList;
+    private String name;
+    private Integer value;
 }

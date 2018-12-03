@@ -37,7 +37,6 @@
         */
         // 异步加载统计信息
         $.post("userCount", function (data) {
-            console.log(data);
             // 使用刚指定的配置项和数据显示图表。
             myChart.setOption({
                 xAxis: {

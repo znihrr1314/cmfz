@@ -2,7 +2,20 @@
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zn.cmfz.dao.UserDao">
+    <resultMap id="userMap" type="com.zn.cmfz.entity.UserDTO">
+        <result column="count" property="value"/>
+        <result column="province" property="name"/>
+    </resultMap>
     <select id="getCount" resultType="int">
         select count(*) from user  where DATEDIFF(now(),date)&lt;#{days}
+    </select>
+    <select id="countSex" resultMap="userMap">
+        select count(sex) count,province from user where sex=#{sex} group by province
+    </select>
+    <select id="selectOne" resultType="com.zn.cmfz.entity.User">
+        select * from user where username=#{username}
+    </select>
+    <select id="allUser" resultType="com.zn.cmfz.entity.User">
+        select * from user
     </select>
 </mapper>
