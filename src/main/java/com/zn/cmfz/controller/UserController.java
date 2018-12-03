@@ -49,7 +49,6 @@ public class UserController {
 
     @RequestMapping("/export")
     public void export(HttpServletResponse response) {
-
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment;fileName=allUser.xls");
         try {
